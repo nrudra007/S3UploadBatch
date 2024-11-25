@@ -17,7 +17,8 @@ phases:
   pre_build:
     commands:
       - echo Entered the pre_build phase...
-      - pip install aws-sam-cli
+      - echo login into docker hub
+      - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
       - echo loggin into AWS ECR...
       - aws --version
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
