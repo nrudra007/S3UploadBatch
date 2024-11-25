@@ -1,0 +1,45 @@
+version: 0.2
+
+#env:
+#  variables:
+#    JAVA_HOME: "/usr/lib/jvm/java-8-openjdk-amd64"
+#  parameter-store:
+#    LOGIN_PASSWORD: /CodeBuild/dockerLoginPassword
+
+phases:
+#  install:
+#    commands:
+#      - echo Entered the install phase...
+#      - apt-get update -y
+#      - apt-get install -y maven
+#    finally:
+#      - echo This always runs even if the update or install command fails 
+  pre_build:
+    commands:
+      - echo Entered the pre_build phase...
+      - pip install aws-sam-cli
+      - echo loggin into AWS ECR...
+      - aws --version
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Entered the build phase...
+      - echo Build started on `date`
+      - echo building maven package
+      - mvn clean package -DskipTests
+      - echo building the docker image
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Entered the post_build phase...
+      - echo Build completed on `date`
+      - echo Pushing the docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+artifacts:
+  files:
+    - target/S3UploadBatch.jar
