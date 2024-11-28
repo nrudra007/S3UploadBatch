@@ -5,6 +5,7 @@
 	<groupId>com.aws.projects</groupId>
 	<artifactId>S3UploadBatch</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<properties>
 		<java.version>17</java.version>
@@ -38,9 +39,9 @@
 			<version>2.24.1</version>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
+	<!-- <dependencyManagement>
 		<dependencies>
-			<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-bom -->
+			https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-bom
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-bom</artifactId>
@@ -48,7 +49,7 @@
 				<type>pom</type>
 			</dependency>
 		</dependencies>
-	</dependencyManagement>
+	</dependencyManagement> -->
 	<build>
 		<finalName>S3UploadBatch</finalName>
 		<pluginManagement>
@@ -62,7 +63,7 @@
 						<target>17</target>
 					</configuration>
 				</plugin>
-				<plugin>
+				<!-- <plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
 					<configuration>
@@ -81,13 +82,13 @@
 					</configuration>
 					<executions>
 						<execution>
-							<phase>package</phase>
+							<phase>install</phase>
 							<goals>
 								<goal>shade</goal>
 							</goals>
 						</execution>
 					</executions>
-				</plugin>
+				</plugin> -->
 				<plugin>
 				    <groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-jar-plugin</artifactId>
