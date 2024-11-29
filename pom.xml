@@ -5,12 +5,9 @@
 	<groupId>com.aws.projects</groupId>
 	<artifactId>S3UploadBatch</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    		<maven.compiler.source>17</maven.compiler.source>
-    		<maven.compiler.target>17</maven.compiler.target>
+		<java.version>17</java.version>
 	</properties>
 
 	<dependencies>
@@ -18,6 +15,22 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
 			<version>1.12.99</version> <!-- Use the latest version -->
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-core</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-lambda-java-events</artifactId>
+			<version>3.11.6</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-api-gateway -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-api-gateway</artifactId>
+			<version>1.12.773</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -32,6 +45,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.24.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>2.24.1</version>
 		</dependency>
@@ -40,23 +58,11 @@
 			<artifactId>log4j-web</artifactId>
 			<version>2.24.1</version>
 		</dependency>
-		<dependency>
-		        <groupId>org.apache.logging.log4j</groupId>
-		        <artifactId>log4j-api</artifactId>
-		        <version>2.24.1</version>
-		</dependency>
 	</dependencies>
-	<!-- <dependencyManagement>
-		<dependencies>
-			https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-bom
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-bom</artifactId>
-				<version>2.24.1</version>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement> -->
+	<!-- <dependencyManagement> <dependencies> https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-bom 
+		<dependency> <groupId>org.apache.logging.log4j</groupId> <artifactId>log4j-bom</artifactId> 
+		<version>2.24.1</version> <type>pom</type> </dependency> </dependencies> 
+		</dependencyManagement> -->
 	<build>
 		<finalName>S3UploadBatch</finalName>
 		<pluginManagement>
@@ -96,7 +102,30 @@
 						</execution>
 					</executions>
 				</plugin>
-				<!--<plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+				    <configuration>
+				        <archive>
+				            <manifest>
+				                <mainClass>com.aws.projects.runner.S3UploadRunner</mainClass>
+				            </manifest> 
+				        </archive> 
+				        <descriptorRefs>
+				            <descriptorRef>jar-with-dependencies</descriptorRef>
+				        </descriptorRefs>
+				    </configuration>
+				    <executions>
+				        <execution>
+				            <id>make-assembly</id>
+				            <phase>package</phase>
+				            <goals>
+				                <goal>single</goal>
+				            </goals>
+				        </execution>
+				    </executions>
+				</plugin>
+				<plugin>
 				    <groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-jar-plugin</artifactId>
 				    <version>3.4.2</version>
@@ -110,7 +139,7 @@
 						</archive>
 					</configuration>
 				</plugin>
-				<plugin>
+				<!--<plugin>
 				    <groupId>org.apache.maven.plugins</groupId>
 				    <artifactId>maven-dependency-plugin</artifactId>
 				    <version>3.8.1</version>
