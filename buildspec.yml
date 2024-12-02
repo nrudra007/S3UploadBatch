@@ -30,7 +30,7 @@ phases:
       - echo Entered the build phase...
       - echo Build started on `date`
       - echo building maven package
-      - mvn clean package -DskipTests
+      - mvn clean package shade:shade -DskipTests
       - echo building the docker image
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
